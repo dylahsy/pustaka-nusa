@@ -1,0 +1,340 @@
+@extends('layouts.perpus')
+
+@section('content')
+@include('partials.anggota_card_styles')
+<style>
+body {
+    background: linear-gradient(135deg, #f7f2ff, #eff6ff 52%, #ffffff);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.card-print-page {
+    min-height: 100vh;
+    padding: 32px;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.card-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+}
+
+.card-action-btn.print { background: #6f42c1; }
+.card-action-btn.back { background: #475569; }
+
+.library-card-wrap {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    justify-items: center;
+}
+
+.library-card {
+    width: 85.6mm;
+    height: 54mm;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1.5px solid #6d28d9;
+    background:
+        radial-gradient(circle at 90% 10%, rgba(216, 180, 254, 0.5) 0 22%, transparent 23%),
+        radial-gradient(circle at 8% 92%, rgba(191, 219, 254, 0.55) 0 26%, transparent 27%),
+        linear-gradient(135deg, #ffffff 0%, #fbf7ff 42%, #ede9fe 72%, #ddd6fe 100%);
+    box-shadow: 0 18px 38px rgba(76, 29, 149, 0.18);
+    color: #111827;
+    padding: 8px 10px;
+}
+
+.library-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 9px;
+    background: linear-gradient(180deg, #4c1d95, #7c3aed 48%, #a78bfa);
+}
+
+.card-head {
+    display: grid;
+    grid-template-columns: 38px 1fr 38px;
+    align-items: center;
+    gap: 7px;
+    position: relative;
+    z-index: 1;
+}
+
+.card-head img {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 1px rgba(49, 46, 129, 0.16));
+}
+
+.card-title {
+    margin: 0;
+    text-align: center;
+    font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+    font-size: 10.5px;
+    line-height: 1.18;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #2e1065;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.card-title span {
+    display: block;
+}
+
+.card-rule {
+    height: 2px;
+    margin: 5px 0 7px;
+    background: linear-gradient(90deg, #4c1d95, #8b5cf6 52%, #4c1d95);
+    border-radius: 99px;
+    position: relative;
+    z-index: 1;
+}
+
+.card-body-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 58px;
+    gap: 9px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.card-data {
+    display: grid;
+    gap: 2.5px;
+    align-content: start;
+    font-size: 8.4px;
+    line-height: 1.2;
+}
+
+.card-row {
+    display: grid;
+    grid-template-columns: 78px 7px minmax(0, 1fr);
+    align-items: start;
+}
+
+.card-label {
+    white-space: nowrap;
+    font-weight: 800;
+    color: #4c1d95;
+}
+
+.card-colon {
+    text-align: center;
+    font-weight: 800;
+    color: #4c1d95;
+}
+
+.card-value {
+    min-width: 0;
+    padding-left: 4px;
+    font-weight: 900;
+    color: #1f2937;
+    overflow-wrap: anywhere;
+}
+
+.address-value {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+.anggota-photo {
+    width: 58px;
+    height: 77px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1.5px solid #6d28d9;
+    background: #fff;
+    box-shadow: 0 3px 8px rgba(76, 29, 149, 0.16);
+    transform: translateY(-5px);
+}
+
+.anggota-photo-placeholder {
+    width: 58px;
+    height: 77px;
+    display: grid;
+    place-items: center;
+    border-radius: 5px;
+    border: 1.5px solid #6d28d9;
+    background: linear-gradient(135deg, #ffffff, #f5f3ff);
+    color: #6d28d9;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0;
+    box-shadow: 0 3px 8px rgba(76, 29, 149, 0.16);
+    transform: translateY(-3px);
+}
+
+.card-note-rule {
+    height: 1px;
+    margin: 7px 0 4px;
+    background: linear-gradient(90deg, transparent, #7c3aed 12%, #7c3aed 88%, transparent);
+    position: relative;
+    z-index: 1;
+}
+
+.card-note {
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #4c1d95;
+    font-size: 7.8px;
+    line-height: 1.25;
+    font-weight: 800;
+}
+
+.card-back {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 12px 14px 10px 18px;
+}
+
+.card-back-title {
+    margin: 0 0 7px;
+    text-align: center;
+    font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.25;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #2e1065;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+    position: relative;
+    z-index: 1;
+}
+
+.card-back-title span {
+    display: block;
+}
+
+.library-rules {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 9px;
+    line-height: 1.42;
+    font-weight: 700;
+    color: #1f2937;
+    position: relative;
+    z-index: 1;
+}
+
+.library-rules li {
+    padding-left: 2px;
+    margin-bottom: 2px;
+}
+
+.library-rules li::marker {
+    color: #6d28d9;
+    font-weight: 900;
+}
+
+@media print {
+    body {
+        background: #fff !important;
+    }
+
+    #header,
+    .header,
+    .scroll-top,
+    #preloader,
+    .card-actions {
+        display: none !important;
+    }
+
+    .main {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .card-print-page {
+        padding: 0;
+        min-height: auto;
+    }
+
+    .library-card-wrap {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .card-side {
+        width: 85.6mm;
+        height: 54mm;
+        margin: 12mm auto;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .card-side:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .library-card {
+        box-shadow: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+</style>
+
+@php
+    $anggota = $anggota;
+    $rows = [
+        ['label' => 'NIS', 'value' => $anggota->nis ?? '-'],
+        ['label' => 'Nama', 'value' => $anggota->nama ?? '-'],
+        ['label' => 'Kelas', 'value' => $anggota->kelas ?? '-'],
+    ];
+
+    $rows[] = ['label' => 'Jenis Kelamin', 'value' => $anggota->jenis_kelamin ?? '-'];
+    $rows[] = ['label' => 'No. HP', 'value' => $anggota->no_hp ?? '-'];
+    $rows[] = ['label' => 'Alamat', 'value' => $anggota->alamat ?? '-', 'class' => 'address-value'];
+
+    $anggotaCard = [
+        'title_top' => 'Kartu Tanda Anggota Perpustakaan',
+        'title_bottom' => 'SMA Negeri 9 Kota Jambi',
+        'rows' => $rows,
+        'photo' => $anggota->foto_kartu ? asset($anggota->foto_kartu) : null,
+        'photo_alt' => 'Foto ' . ($anggota->nama ?? 'anggota'),
+        'initial' => strtoupper(substr($anggota->nama ?? 'A', 0, 1)),
+        'note' => 'Kartu ini dapat digunakan untuk administrasi perpustakaan dan wajib dibawa saat peminjaman.',
+    ];
+@endphp
+
+<div class="card-print-page">
+    <div class="card-actions">
+        <button type="button" class="card-action-btn print" onclick="window.print()">
+            <i class="bi bi-printer"></i>
+            Cetak Depan Belakang
+        </button>
+        <a href="{{ url('/anggota') }}" class="card-action-btn back">
+            <i class="bi bi-arrow-left"></i>
+            Kembali ke Data Anggota
+        </a>
+    </div>
+<br>
+<br>
+<br>
+    @include('partials.anggota_card_pair', ['anggotaCard' => $anggotaCard])
+</div>
+@endsection
