@@ -667,8 +667,10 @@
           <tbody>
             @forelse ($buku as $item)
               @php
-                $coverPath = filled($item->cover_buku) && file_exists(public_path($item->cover_buku))
-                    ? asset($item->cover_buku)
+                $coverPath = filled($item->cover_buku)
+                    ? (filter_var($item->cover_buku, FILTER_VALIDATE_URL)
+                        ? $item->cover_buku
+                        : (file_exists(public_path($item->cover_buku)) ? asset($item->cover_buku) : null))
                     : null;
                 $bookInitial = strtoupper(substr($item->judul_buku ?? 'B', 0, 1));
               @endphp

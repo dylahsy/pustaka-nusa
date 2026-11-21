@@ -71,10 +71,18 @@ class DendaController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'transaksi_id' => 'required',
+            'transaksi_id' => 'required|exists:transaksis,id',
             'jumlah_denda' => 'required|integer|min:0',
-            'keterangan' => 'nullable',
+            'keterangan' => 'required|string',
             'status' => 'required',
+        ], [
+            'transaksi_id.required' => 'Harap isi kolom ini.',
+            'transaksi_id.exists' => 'Transaksi yang dipilih tidak tersedia.',
+            'jumlah_denda.required' => 'Harap isi kolom ini.',
+            'jumlah_denda.integer' => 'Jumlah denda harus berupa angka.',
+            'jumlah_denda.min' => 'Jumlah denda tidak boleh kurang dari 0.',
+            'keterangan.required' => 'Harap isi kolom ini.',
+            'status.required' => 'Harap isi kolom ini.',
         ]);
 
         $denda = Denda::findOrFail($id);

@@ -175,12 +175,10 @@ body {
                                 <small class="form-note">Biarkan kosong jika foto kartu tidak ingin diubah. Format JPG, PNG, atau WEBP.</small>
                                 <span class="text-danger">{{ $errors->first('foto_kartu') }}</span>
 
-                                @if($anggota->foto_kartu)
                                 <div class="mt-2">
-                                    <img src="{{ asset($anggota->foto_kartu) }}" alt="Foto kartu {{ $anggota->nama }}"
+                                    <img src="{{ asset($anggota->cardPhotoPath()) }}" alt="Foto kartu {{ $anggota->nama }}"
                                         class="current-photo">
                                 </div>
-                                @endif
                             </div>
                         </div>
                     </div>

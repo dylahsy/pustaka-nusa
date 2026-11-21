@@ -314,7 +314,7 @@ body {
         'title_top' => 'Kartu Tanda Anggota Perpustakaan',
         'title_bottom' => 'SMA Negeri 9 Kota Jambi',
         'rows' => $rows,
-        'photo' => $anggota->foto_kartu ? asset($anggota->foto_kartu) : null,
+        'photo' => asset($anggota->cardPhotoPath()),
         'photo_alt' => 'Foto ' . ($anggota->nama ?? 'anggota'),
         'initial' => strtoupper(substr($anggota->nama ?? 'A', 0, 1)),
         'note' => 'Kartu ini dapat digunakan untuk administrasi perpustakaan dan wajib dibawa saat peminjaman.',

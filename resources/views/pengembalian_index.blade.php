@@ -3,36 +3,10 @@
 @section('content')
 
 <style>
-    .tanggal-kembali-field {
-        position: relative;
-        width: 160px;
-    }
-
-    .tanggal-kembali-field input {
-        width: 100%;
-        padding-right: 38px;
-    }
-
-    .tanggal-kembali-icon {
-        position: absolute;
-        top: 50%;
-        right: 11px;
-        transform: translateY(-50%);
-        color: #64748b;
-        font-size: 16px;
-        border: 0;
-        padding: 0;
-        background: transparent;
-        cursor: pointer;
-    }
-
-    .tanggal-kembali-picker {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-        pointer-events: none;
-    }
+    .tanggal-kembali-field { position: relative; width: 145px; }
+    .tanggal-kembali-field input[type="text"] { padding-right: 34px; }
+    .tanggal-kembali-icon { position: absolute; top: 50%; right: 7px; transform: translateY(-50%); border: 0; background: transparent; color: #64748b; cursor: pointer; }
+    .tanggal-kembali-picker { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 </style>
 
 <div class="simpus-page">
@@ -76,13 +50,11 @@
                         <td>{{ $row->buku->judul_buku }}</td>
                         <td>{{ $row->jatuh_tempo ? $row->jatuh_tempo->format('d-m-Y') : '-' }}</td>
                         <td>
-                            <form action="{{ url('pengembalian/'.$row->id) }}" method="POST" class="d-flex gap-2 justify-content-center align-items-center flex-wrap">
+                            <form action="{{ url('pengembalian/'.$row->id) }}" method="POST" class="d-flex gap-2 justify-content-center align-items-center flex-nowrap">
                                 @csrf
                                 <div class="tanggal-kembali-field">
                                     <input type="text" name="tanggal_kembali" class="form-control form-control-sm" value="{{ old('tanggal_kembali') }}" placeholder="dd-mm-yyyy" inputmode="numeric" maxlength="10" required>
-                                    <button type="button" class="tanggal-kembali-icon" aria-label="Pilih tanggal kembali">
-                                        <i class="bi bi-calendar3" aria-hidden="true"></i>
-                                    </button>
+                                    <button type="button" class="tanggal-kembali-icon" aria-label="Pilih tanggal pengembalian"><i class="bi bi-calendar3" aria-hidden="true"></i></button>
                                     <input type="date" class="tanggal-kembali-picker" tabindex="-1" aria-hidden="true">
                                 </div>
                                 <button type="submit" class="simpus-btn-primary">Kembalikan</button>
@@ -104,25 +76,20 @@
 </div>
 
 <script>
-    document.querySelectorAll('.tanggal-kembali-field').forEach((field) => {
-        const textInput = field.querySelector('input[name="tanggal_kembali"]');
-        const datePicker = field.querySelector('.tanggal-kembali-picker');
-        const calendarButton = field.querySelector('.tanggal-kembali-icon');
+document.querySelectorAll('.tanggal-kembali-field').forEach((field) => {
+    const textInput = field.querySelector('input[name="tanggal_kembali"]');
+    const datePicker = field.querySelector('.tanggal-kembali-picker');
 
-        calendarButton.addEventListener('click', () => {
-            if (typeof datePicker.showPicker === 'function') {
-                datePicker.showPicker();
-            } else {
-                datePicker.click();
-            }
-        });
-
-        datePicker.addEventListener('change', () => {
-            if (!datePicker.value) return;
-            const [year, month, day] = datePicker.value.split('-');
-            textInput.value = `${day}-${month}-${year}`;
-        });
+    field.querySelector('.tanggal-kembali-icon').addEventListener('click', () => {
+        if (typeof datePicker.showPicker === 'function') datePicker.showPicker(); else datePicker.click();
     });
-</script>
 
+    datePicker.addEventListener('change', () => {
+        if (!datePicker.value) return;
+        const [year, month, day] = datePicker.value.split('-');
+        textInput.value = `${day}-${month}-${year}`;
+        textInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+});
+</script>
 @endsection

@@ -44,10 +44,13 @@ class PengembalianController extends Controller
     {
         $request->validate([
             'tanggal_kembali' => 'required|date_format:d-m-Y',
+        ], [
+            'tanggal_kembali.required' => 'Harap isi kolom ini.',
+            'tanggal_kembali.date_format' => 'Format tanggal harus dd-mm-yyyy.',
         ]);
 
         $transaksi = Transaksi::findOrFail($id);
-        $transaksi->tanggal_kembali = Carbon::createFromFormat('d-m-Y', $request->tanggal_kembali)->format('Y-m-d');
+        $transaksi->tanggal_kembali = Carbon::createFromFormat('d-m-Y', $request->tanggal_kembali)->toDateString();
         $transaksi->status = 'dikembalikan';
         $transaksi->save();
 

@@ -1179,7 +1179,7 @@
     });
 
     document.addEventListener('change', function(event) {
-        if (event.target.matches('select[required], input[type="file"][required]')) {
+        if (event.target.matches('input[required], select[required], textarea[required]')) {
             event.target.setCustomValidity('');
         }
     });

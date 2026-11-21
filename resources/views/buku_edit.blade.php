@@ -142,9 +142,11 @@ body {
                         <div class="form-group mb-3">
                             <label for="cover_buku" class="form-label">Upload Cover Buku</label>
                             @php
-                            $currentCoverPath = filled($buku->cover_buku) && file_exists(public_path($buku->cover_buku))
-                            ? asset($buku->cover_buku)
-                            : null;
+                            $currentCoverPath = filled($buku->cover_buku)
+                                ? (filter_var($buku->cover_buku, FILTER_VALIDATE_URL)
+                                    ? $buku->cover_buku
+                                    : (file_exists(public_path($buku->cover_buku)) ? asset($buku->cover_buku) : null))
+                                : null;
                             @endphp
 
                             @if($currentCoverPath)
@@ -159,8 +161,7 @@ body {
                             </div>
                             @endif
 
-                            <input type="file" class="form-control" id="cover_buku" name="cover_buku" accept="image/*"
-                                required>
+                            <input type="file" class="form-control" id="cover_buku" name="cover_buku" accept="image/*">
                             <span class="text-danger d-block">{{ $errors->first('cover_buku') }}</span>
                         </div>
 

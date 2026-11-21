@@ -43,13 +43,13 @@ body {
 
                         <div class="form-group mb-3">
                             <label for="jumlah_denda" class="form-label">Jumlah Denda</label>
-                            <input type="number" min="0" class="form-control" id="jumlah_denda" name="jumlah_denda" value="{{ old('jumlah_denda', $denda->jumlah_denda) }}" required>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="jumlah_denda" name="jumlah_denda" value="{{ old('jumlah_denda', $denda->jumlah_denda) }}" required>
                             <span class="text-danger">{{ $errors->first('jumlah_denda') }}</span>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="keterangan" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan', $denda->keterangan) }}</textarea>
+                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3" required>{{ old('keterangan', $denda->keterangan) }}</textarea>
                             <span class="text-danger">{{ $errors->first('keterangan') }}</span>
                         </div>
 

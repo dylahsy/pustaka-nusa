@@ -94,7 +94,7 @@ class BukuController extends Controller
             'penerbit'      => 'required',
             'tahun_terbit'  => 'required|digits:4|integer',
             'kategori_buku_id' => 'required|exists:kategori_buku,id',
-            'cover_buku'    => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:4096',
+            'cover_buku'    => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:4096',
             'sinopsis'      => 'required|string|max:5000',
         ], $this->bukuValidationMessages());
 

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -36,7 +39,30 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        $this->ensureDefaultKepalaAccount();
+
         return view('auth.login2');
+    }
+
+    /**
+     * Make a fresh local installation usable without manually importing a
+     * user record. Existing accounts and passwords are never overwritten.
+     */
+    private function ensureDefaultKepalaAccount(): void
+    {
+        if (! Schema::hasTable('users')) {
+            return;
+        }
+
+        User::firstOrCreate(
+            ['email' => 'kepala@perpus.test'],
+            [
+                'name' => 'Kepala Perpustakaan',
+                'role' => 'Kepala Perpustakaan',
+                'status' => 'Aktif',
+                'password' => Hash::make('Simpus123!'),
+            ]
+        );
     }
 
     protected function validateLogin(Request $request)
